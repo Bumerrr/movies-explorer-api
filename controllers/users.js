@@ -22,6 +22,6 @@ module.exports.updateUser = (req, res, next) => {
       if (err.name === 'ValidationError') {
         return next(new BadRequestError('Введены некорретные данные'));
       }
-      return next(err);
+      return next(err); // aaaaaaaaa
     });
 };
