@@ -1,5 +1,5 @@
 # movies-explorer-api
 
-**домена сервера:**
+**домен сервера:**
 
 `https://api.bizit.nomoredomains.work/`
