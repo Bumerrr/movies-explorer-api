@@ -4,8 +4,14 @@ const { OK } = require('../utils/constants');
 const { BadRequestError, NotFoundError } = require('../errors');
 
 module.exports.getUser = (req, res, next) => {
-  User.find({})
-    .then((user) => res.status(OK).send({ data: user }))
+  const userId = req.user._id;
+  User.findById(userId)
+    .then((user) => {
+      res.status(OK).send(user);
+    })
+    .catch((err) => {
+      res.send(err);
+    })
     .catch(next);
 };
 
