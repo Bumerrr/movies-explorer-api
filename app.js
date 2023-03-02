@@ -25,10 +25,10 @@ app.use(requestLogger);
 app.use(authRouter);
 app.use('/users', auth, usersRouter);
 app.use('/movies', auth, moviesRouter);
-app.use(errorLogger);
-app.use('*', (req, res, next) => {
+app.use('*', auth, (req, res, next) => {
   next(new NotFoundError('Адреса по вашему запросу не существует'));
 });
+app.use(errorLogger);
 
 app.use(errors());
 app.use((err, req, res, next) => {

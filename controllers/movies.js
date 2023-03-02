@@ -11,8 +11,14 @@ const {
 } = require('../errors');
 
 module.exports.getMovies = (req, res, next) => {
-  Movie.find({})
-    .then((movie) => res.status(OK).send({ data: movie }))
+  const movieId = req.user._id;
+  Movie.findById(movieId)
+    .then((movie) => {
+      res.status(OK).send(movie);
+    })
+    .catch((err) => {
+      res.send(err);
+    })
     .catch(next);
 };
 
