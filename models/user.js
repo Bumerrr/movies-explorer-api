@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
 const { UnauthorizedError } = require('../errors');
+const { SCHEMA_VALIDATE_MESSAGES_EMAIL, NOT_AUTH_ERROR_WRONG_EMAIL_OR_PASSWORD } = require('../utils/constants');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -13,7 +14,6 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true,
-    minlength: 8,
     select: false,
   },
   email: {
@@ -22,29 +22,25 @@ const userSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => validator.isEmail(v),
-      message: 'Неправильный формат почты',
+      message: SCHEMA_VALIDATE_MESSAGES_EMAIL,
     },
   },
 });
-// добавим метод findUserByCredentials схеме пользователя
-// у него будет два параметра — почта и пароль
+
 userSchema.statics.findUserByCredentials = function (email, password) {
-  return this.findOne({ email }).select('+password') // Но в случае аутентификации хеш пароля нужен.
-  // Чтобы это реализовать, после вызова метода модели,
-  // нужно добавить вызов метода'select', передав ему строку'+password':
+  return this.findOne({ email }).select('+password')
     .then((user) => {
-      // здесь в объекте user будет хеш пароля
       if (!user) {
-        return Promise.reject(new UnauthorizedError('Неправильные почта или пароль'));
+        return Promise.reject(new UnauthorizedError(NOT_AUTH_ERROR_WRONG_EMAIL_OR_PASSWORD));
       }
 
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            return Promise.reject(new UnauthorizedError('Неправильные почта или пароль'));
+            return Promise.reject(new UnauthorizedError(NOT_AUTH_ERROR_WRONG_EMAIL_OR_PASSWORD));
           }
 
-          return user; // теперь user доступен
+          return user;
         });
     });
 };

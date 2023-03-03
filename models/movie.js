@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 
+const { SCHEMA_VALIDATE_MESSAGES_URL } = require('../utils/constants');
+
 const movieSchema = new mongoose.Schema({
   country: {
     type: String,
@@ -32,7 +34,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => validator.isURL(v),
-      message: 'ссылка на аватар должна быть валидной',
+      message: SCHEMA_VALIDATE_MESSAGES_URL,
     },
   },
 
@@ -41,7 +43,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => validator.isURL(v),
-      message: 'ссылка на аватар должна быть валидной',
+      message: SCHEMA_VALIDATE_MESSAGES_URL,
     },
   },
 
@@ -50,7 +52,7 @@ const movieSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: (v) => validator.isURL(v),
-      message: 'ссылка на аватар должна быть валидной',
+      message: SCHEMA_VALIDATE_MESSAGES_URL,
     },
   },
 

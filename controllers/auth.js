@@ -5,6 +5,14 @@ const { NODE_ENV, JWT_SECRET } = process.env;
 const User = require('../models/user');
 
 const {
+  VALIDATION_ERROR,
+  CONFLICT_ERROR_EMAIL,
+  BAD_REQUEST,
+  PRODUCTION,
+  DEV_SECRET,
+} = require('../utils/constants');
+
+const {
   BadRequestError,
   ConflictError,
 } = require('../errors');
@@ -25,10 +33,10 @@ module.exports.createUser = (req, res, next) => {
         }))
         .catch((err) => {
           if (err.code === 11000) {
-            return next(new ConflictError('Пользователь с таким email уже существует'));
+            return next(new ConflictError(CONFLICT_ERROR_EMAIL));
           }
-          if (err.name === 'ValidationError') {
-            return next(new BadRequestError('Введены некорретные данные'));
+          if (err.name === VALIDATION_ERROR) {
+            return next(new BadRequestError(BAD_REQUEST));
           }
           return next(err);
         });
@@ -40,7 +48,7 @@ module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret', {
+      const token = jwt.sign({ _id: user._id }, NODE_ENV === PRODUCTION ? JWT_SECRET : DEV_SECRET, {
         expiresIn: '7d',
       });
       res.status(200).send({ token });
