@@ -20,6 +20,7 @@ const BEARER = 'Bearer ';
 const PRODUCTION = 'production';
 const DEV_SECRET = 'dev-secret';
 const GOOD = 'Все работает как надо';
+const PORT_NUMBER = 3000;
 
 module.exports = {
   OK,
@@ -44,4 +45,5 @@ module.exports = {
   PRODUCTION,
   DEV_SECRET,
   GOOD,
+  PORT_NUMBER,
 };
